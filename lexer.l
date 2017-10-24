@@ -49,6 +49,8 @@
 "or"              { return T_OR; }
 "if"              { return T_IF; }
 "else"            { return T_ELSE; }
+"while"           { return T_WHILE; }
+"do"              { return T_DO; }
 "true"            { return T_TRUE; }
 "false"           { return T_FALSE; }
 "print"           { return T_PRINT; }
