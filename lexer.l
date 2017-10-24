@@ -34,9 +34,9 @@
 "*"               { return T_MULTIPLY; }
 "/"               { return T_DIVIDE; }
 "="               { return T_EQUAL; }
-"=="              { return T_EQEQUAL; }
-"<"               { return T_LESS; }
-"<="              { return T_LESSEQ; }
+"=="              { return T_EQUALEQ; }
+"<"               { return T_GREAT; }
+"<="              { return T_GREATEQ; }
 ";"               { return T_SEMIC; }
 ":"               { return T_COLON; }
 "->"              { return T_ARROW; }
@@ -55,7 +55,6 @@
 "false"           { return T_FALSE; }
 "print"           { return T_PRINT; }
 "return"          { return T_RETURN; }
-"for"             { return T_FOR; }
 "int"             { return T_INT; }
 "bool"            { return T_BOOL; }
 "new"             { return T_NEW; }
