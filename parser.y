@@ -18,9 +18,9 @@
 %token T_MULTIPLY
 %token T_DIVIDE
 %token T_EQUAL
-%token T_EQEQUAL
-%token T_LESS
-%token T_LESSEQ
+%token T_EQUALEQ
+%token T_GREAT
+%token T_GREATEQ
 %token T_SEMIC
 %token T_COLON
 %token T_ARROW
@@ -37,7 +37,6 @@
 %token T_FALSE
 %token T_PRINT
 %token T_RETURN
-%token T_FOR
 %token T_INT
 %token T_BOOL
 %token T_NEW
@@ -45,18 +44,17 @@
 %token T_NONE
 %token T_DOT
 %token T_ID
-%token T_DOT
-%token T_ID
 %token T_INTVALUE
 %token T_EOF
 %token T_UMINUS
-
+%token T_DO
+%token T_WHILE
 
 /* WRITEME: Specify precedence here */
 
-%left T_AND
 %left T_OR
-%left T_LESS T_LESSEQ T_EQEQUAL
+%left T_AND
+%left T_GREAT T_GREATEQ T_EQUALEQ
 %left T_PLUS T_MINUS
 %left T_MULTIPLY T_DIVIDE
 %right T_NOT T_UMINUS
@@ -66,71 +64,113 @@
             at least one rule to run successfully. Replace
             this with your appropriate start rules. */
 
-Start : Classes
+Start : ClassList
       ;
 
 /* WRITME: Write your Bison grammar specification here */
 
-Classes : Classes Class | Class
+ClassList : ClassList Class | Class
 	;
 
-Class : T_ID T_COLON T_ID T_LEFTBRACK Members Methods T_RIGHTBRACK
-	| T_ID T_LEFTBRACK Members Methods T_RIGHTBRACK
+Class : T_ID T_LEFTBRACK MemberList MethodList T_RIGHTBRACK
 	;
 
-Members : Members Member |
+Type : T_INT | T_BOOL | T_ID
+;
+
+MemberList : MemberList Member
+	|Member
+ 	|%empty
 	;
 
-Member : Type T_ID
+Member : Type T_ID 
+;
 
-Methods : Methods Method |
+MethodList : MethodList Method
+	| Method	
+	| %empty
 	;
 
 Method : T_ID T_LEFTPAREN Args T_RIGHTPAREN T_COLON ReturnT T_LEFTBRACK Body T_RIGHTBRACK
 	| T_ID T_LEFTPAREN Args T_RIGHTPAREN T_ARROW ReturnT T_LEFTBRACK Body T_RIGHTBRACK
 	;
 
-Args : Arg |
+Args : Arg | %empty
 	;
 
-Arg : Arg T_COMMA Argument | Argument
+Arg : Arg T_COMMA Expr | Expr 
 	;
 
 Argument : Type T_ID
 	;
 
-
 ReturnT : Type | T_NONE
+;
 
 Body : Declarations Statements Return
 	;
 
-Declarations : Declarations Type Declaration
+Declarations : Declarations Type Declaration | %empty
 	;
 
-Declaration :
+Declaration : Declaration T_COMMA T_ID | T_ID
+;
 
-Statements :
+Statements : Statements Statement
+;
 
-Statement :
+Statement : Assignment | IfElse | DoWhile | MethodCall | T_PRINT Expr
+;
 
-Assignment :
+Assignment : T_ID T_EQUAL Expr | T_ID T_DOT T_ID T_EQUAL Expr
+;
 
-IfElse :
+IfElse : T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK
+| T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK T_ELSE T_LEFTBRACK Block T_RIGHTBRACK
+	;
 
-ForLoop : 
+DoWhile : T_WHILE Expr T_LEFTBRACK Block T_RIGHTBRACK
+| T_DO T_LEFTBRACK Block T_RIGHTBRACK T_WHILE Expr
+;
 
-Block : 
+Block : Block Statement | Statement | %empty
+	;
 
-Return :
+Return : T_RETURN Expr
+	;
 
-Expr : Expr T_PLUS Expr | 
+Expr : Expr T_PLUS Expr
+|	Expr T_MINUS Expr
+|	Expr T_MULTIPLY Expr
+|	Expr T_DIVIDE Expr
+|	Expr T_GREAT Expr
+|	Expr T_GREATEQ Expr
+|	Expr T_EQUALEQ Expr
+|	Expr T_AND Expr
+|	Expr T_OR Expr
+|	T_NOT Expr
+|	T_MINUS Expr %prec T_UMINUS
+|	T_ID
+|	T_ID T_DOT T_ID
+|	MethodCall
+|	T_LEFTPAREN Expr T_RIGHTPAREN
+|	T_INTVALUE
+|	T_TRUE
+|	T_FALSE
+|	T_NEW T_ID
+|	T_NEW T_ID T_LEFTPAREN Parameters T_RIGHTPAREN
+;
 
-MethodCall : 
+MethodCall : T_ID T_LEFTPAREN Args T_RIGHTPAREN
+| T_ID T_DOT T_ID T_LEFTPAREN Args T_RIGHTPAREN
+;
 
-Parameters :
+Parameters : Parameter
+;
 
-Parameter : 
+Parameter : Parameter T_COMMA Expr | Expr
+;
+
 
 %%
 
