@@ -76,7 +76,7 @@ Class : T_ID T_LEFTBRACK MemberList MethodList T_RIGHTBRACK
 	;
 
 Type : T_INT | T_BOOL | T_ID
-;
+	;
 
 MemberList : MemberList Member
 	|Member
@@ -84,7 +84,7 @@ MemberList : MemberList Member
 	;
 
 Member : Type T_ID 
-;
+	;	
 
 MethodList : MethodList Method
 	| Method	
@@ -163,14 +163,13 @@ Expr :  Expr T_PLUS Expr
 
 MethodCall : T_ID T_LEFTPAREN Args T_RIGHTPAREN
 | T_ID T_DOT T_ID T_LEFTPAREN Args T_RIGHTPAREN
-;
+	;
 
 Parameters : Parameter
-;
+	;
 
 Parameter : Parameter T_COMMA Expr | Expr
-;
-
+	;
 
 %%
 
