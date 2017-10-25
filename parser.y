@@ -65,7 +65,7 @@
             this with your appropriate start rules. */
 
 Start : ClassList
-      ;
+	;
 
 /* WRITME: Write your Bison grammar specification here */
 
@@ -105,7 +105,7 @@ Argument : Type T_ID
 	;
 
 ReturnT : Type | T_NONE
-;
+	;
 
 Body : Declarations Statements Return
 	;
@@ -114,16 +114,16 @@ Declarations : Declarations Type Declaration | %empty
 	;
 
 Declaration : Declaration T_COMMA T_ID | T_ID
-;
+	;
 
 Statements : Statements Statement
-;
+	;
 
 Statement : Assignment | IfElse | DoWhile | MethodCall | T_PRINT Expr
-;
+	;
 
 Assignment : T_ID T_EQUAL Expr | T_ID T_DOT T_ID T_EQUAL Expr
-;
+	;
 
 IfElse : T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK
 | T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK T_ELSE T_LEFTBRACK Block T_RIGHTBRACK
@@ -131,7 +131,7 @@ IfElse : T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK
 
 DoWhile : T_WHILE Expr T_LEFTBRACK Block T_RIGHTBRACK
 | T_DO T_LEFTBRACK Block T_RIGHTBRACK T_WHILE Expr
-;
+	;
 
 Block : Block Statement | Statement | %empty
 	;
@@ -139,27 +139,27 @@ Block : Block Statement | Statement | %empty
 Return : T_RETURN Expr
 	;
 
-Expr : Expr T_PLUS Expr
-|	Expr T_MINUS Expr
-|	Expr T_MULTIPLY Expr
-|	Expr T_DIVIDE Expr
-|	Expr T_GREAT Expr
-|	Expr T_GREATEQ Expr
-|	Expr T_EQUALEQ Expr
-|	Expr T_AND Expr
-|	Expr T_OR Expr
-|	T_NOT Expr
-|	T_MINUS Expr %prec T_UMINUS
-|	T_ID
-|	T_ID T_DOT T_ID
-|	MethodCall
-|	T_LEFTPAREN Expr T_RIGHTPAREN
-|	T_INTVALUE
-|	T_TRUE
-|	T_FALSE
-|	T_NEW T_ID
-|	T_NEW T_ID T_LEFTPAREN Parameters T_RIGHTPAREN
-;
+Expr :  Expr T_PLUS Expr
+	|	Expr T_MINUS Expr
+	|	Expr T_MULTIPLY Expr
+	|	Expr T_DIVIDE Expr
+	|	Expr T_GREAT Expr
+	|	Expr T_GREATEQ Expr
+	|	Expr T_EQUALEQ Expr
+	|	Expr T_AND Expr
+	|	Expr T_OR Expr
+	|	T_NOT Expr
+	|	T_MINUS Expr %prec T_UMINUS
+	|	T_ID
+	|	T_ID T_DOT T_ID
+	|	MethodCall
+	|	T_LEFTPAREN Expr T_RIGHTPAREN
+	|	T_INTVALUE
+	|	T_TRUE
+	|	T_FALSE
+	|	T_NEW T_ID
+	|	T_NEW T_ID T_LEFTPAREN Parameters T_RIGHTPAREN
+	;
 
 MethodCall : T_ID T_LEFTPAREN Args T_RIGHTPAREN
 | T_ID T_DOT T_ID T_LEFTPAREN Args T_RIGHTPAREN
