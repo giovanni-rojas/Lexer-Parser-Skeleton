@@ -34,9 +34,9 @@
 "*"               { return T_MULTIPLY; }
 "/"               { return T_DIVIDE; }
 "="               { return T_EQUAL; }
-"=="              { return T_EQUALEQ; }
-"<"               { return T_GREAT; }
-"<="              { return T_GREATEQ; }
+"equals"              { return T_EQUALEQ; }
+">"               { return T_GREAT; }
+">="              { return T_GREATEQ; }
 ";"               { return T_SEMIC; }
 ":"               { return T_COLON; }
 "->"              { return T_ARROW; }
@@ -60,6 +60,7 @@
 "new"             { return T_NEW; }
 "not"             { return T_NOT; }
 "none"            { return T_NONE; }
+"extends"         { return T_EXTENDS; }
 "."               { return T_DOT; }
 [a-zA-Z][a-zA-Z0-9]*     { return T_ID; }
 0|[1-9][0-9]*            { return T_INTVALUE; }

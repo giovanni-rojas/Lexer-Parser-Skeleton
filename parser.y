@@ -49,6 +49,7 @@
 %token T_UMINUS
 %token T_DO
 %token T_WHILE
+%token T_EXTENDS
 
 /* WRITEME: Specify precedence here */
 
@@ -57,7 +58,7 @@
 %left T_GREAT T_GREATEQ T_EQUALEQ
 %left T_PLUS T_MINUS
 %left T_MULTIPLY T_DIVIDE
-%right T_NOT T_UMINUS
+%precedence T_NOT T_UMINUS
 %%
 
 /* WRITEME: This rule is a placeholder, since Bison requires
@@ -69,36 +70,35 @@ Start : ClassList
 
 /* WRITME: Write your Bison grammar specification here */
 
-ClassList : ClassList Class | Class
+ClassList : Class ClassList | Class
 	;
 
-Class : T_ID T_LEFTBRACK MemberList MethodList T_RIGHTBRACK
+Class : T_ID T_LEFTBRACK MemberList MethodList T_RIGHTBRACK 
+	| T_ID T_EXTENDS T_ID T_LEFTBRACK MemberList MethodList T_RIGHTBRACK 
+
 	;
 
 Type : T_INT | T_BOOL | T_ID
 	;
 
 MemberList : MemberList Member
-	|Member
  	|%empty
 	;
 
-Member : Type T_ID 
+Member : Type T_ID T_SEMIC
 	;	
 
-MethodList : MethodList Method
-	| Method	
+MethodList : Method MethodList
 	| %empty
 	;
 
-Method : T_ID T_LEFTPAREN Args T_RIGHTPAREN T_COLON ReturnT T_LEFTBRACK Body T_RIGHTBRACK
-	| T_ID T_LEFTPAREN Args T_RIGHTPAREN T_ARROW ReturnT T_LEFTBRACK Body T_RIGHTBRACK
+Method :  T_ID T_LEFTPAREN Args T_RIGHTPAREN T_ARROW ReturnT T_LEFTBRACK Body T_RIGHTBRACK
 	;
 
 Args : Arg | %empty
 	;
 
-Arg : Arg T_COMMA Expr | Expr 
+Arg : Arg T_COMMA Argument | Argument 
 	;
 
 Argument : Type T_ID
@@ -107,22 +107,22 @@ Argument : Type T_ID
 ReturnT : Type | T_NONE
 	;
 
-Body : Declarations Statements Return
+Body : DeclarationList Statements Return
 	;
 
-Declarations : Declarations Type Declaration | %empty
+DeclarationList : %empty | DeclarationList Type Declaration T_SEMIC
 	;
 
-Declaration : Declaration T_COMMA T_ID | T_ID
+Declaration : Declaration T_COMMA T_ID | T_ID 
 	;
 
-Statements : Statements Statement
+Statements : Statement Statements | %empty
 	;
 
-Statement : Assignment | IfElse | DoWhile | MethodCall | T_PRINT Expr
+Statement : Assignment | IfElse | DoWhile | MethodCall | T_PRINT Expr T_SEMIC
 	;
 
-Assignment : T_ID T_EQUAL Expr | T_ID T_DOT T_ID T_EQUAL Expr
+Assignment : T_ID T_EQUAL Expr T_SEMIC | T_ID T_DOT T_ID T_EQUAL Expr T_SEMIC
 	;
 
 IfElse : T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK
@@ -130,13 +130,13 @@ IfElse : T_IF Expr T_LEFTBRACK Block T_RIGHTBRACK
 	;
 
 DoWhile : T_WHILE Expr T_LEFTBRACK Block T_RIGHTBRACK
-| T_DO T_LEFTBRACK Block T_RIGHTBRACK T_WHILE Expr
+| T_DO T_LEFTBRACK Block T_RIGHTBRACK T_WHILE Expr T_SEMIC
 	;
 
-Block : Block Statement | Statement | %empty
+Block : Block Statement |  %empty
 	;
 
-Return : T_RETURN Expr
+Return : T_RETURN Expr T_SEMIC | %empty
 	;
 
 Expr :  Expr T_PLUS Expr
@@ -158,17 +158,14 @@ Expr :  Expr T_PLUS Expr
 	|	T_TRUE
 	|	T_FALSE
 	|	T_NEW T_ID
-	|	T_NEW T_ID T_LEFTPAREN Parameters T_RIGHTPAREN
+	|	T_NEW T_ID T_LEFTPAREN Parameter T_RIGHTPAREN
 	;
 
-MethodCall : T_ID T_LEFTPAREN Args T_RIGHTPAREN
-| T_ID T_DOT T_ID T_LEFTPAREN Args T_RIGHTPAREN
+MethodCall : T_ID T_LEFTPAREN Args T_RIGHTPAREN T_SEMIC
+| T_ID T_DOT T_ID T_LEFTPAREN Args T_RIGHTPAREN T_SEMIC
 	;
 
-Parameters : Parameter
-	;
-
-Parameter : Parameter T_COMMA Expr | Expr
+Parameter : Parameter T_COMMA Expr | Expr 
 	;
 
 %%
